@@ -5,13 +5,19 @@ export type WeddingEnquiry = {
   date: string;
   venue: string;
   guests: number;
-  price: number;
+  basePrice: number;
+  baseGuests: number;
+  pricePerGuest: number;
 };
 
-function formatDateFr(iso: string): string {
-  if (!iso) return "—";
-  const parsed = new Date(`${iso}T00:00:00`);
-  if (Number.isNaN(parsed.getTime())) return iso;
+function formatDateFr(value: string | Date): string {
+  if (!value) return "—";
+  // A plain `YYYY-MM-DD` string (from a <input type="date">) parses as UTC
+  // midnight; anchoring it to local noon avoids the date shifting by a day
+  // in timezones behind UTC. A Date object (e.g. "now" or "now + 30 days")
+  // is already a real instant and needs no such adjustment.
+  const parsed = typeof value === "string" ? new Date(`${value}T12:00:00`) : value;
+  if (Number.isNaN(parsed.getTime())) return String(value);
   return parsed.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
 }
 
@@ -23,13 +29,31 @@ function formatPrice(value: number): string {
   return `${grouped} €`;
 }
 
+/** Deterministic devis reference from the enquiry itself, not random — the same
+ * request regenerated (e.g. after fixing a typo) yields the same number. */
+function devisReference(enquiry: WeddingEnquiry): string {
+  const basis = `${enquiry.names}|${enquiry.date}|${enquiry.venue}|${enquiry.guests}`;
+  let hash = 0;
+  for (let i = 0; i < basis.length; i += 1) {
+    hash = (hash * 31 + basis.charCodeAt(i)) >>> 0;
+  }
+  const year = enquiry.date ? enquiry.date.slice(0, 4) : new Date().getFullYear().toString();
+  return `FL-${year}-${(hash % 9000 + 1000).toString()}`;
+}
+
+function addDays(base: Date, days: number): Date {
+  const copy = new Date(base);
+  copy.setDate(copy.getDate() + days);
+  return copy;
+}
+
 /**
- * Builds a client-side PDF summary of an illustrative wedding enquiry.
- * Runs entirely in the browser (jsPDF), no backend involved. Carries the
- * site's own palette (the pale blue/powder pink/ink tokens from
- * app/globals.css, hand-copied here since a PDF can't read CSS custom
- * properties) so the document reads as the same object as the page it
- * came from rather than a generic black-on-white printout.
+ * Builds a client-side PDF quote (devis) for an illustrative wedding
+ * enquiry. Runs entirely in the browser (jsPDF), no backend involved.
+ * Structured like an actual devis a florist would send — reference number,
+ * issue/validity dates, issuer/client blocks, an itemized line table, and a
+ * signature area — rather than a marketing summary card, while keeping the
+ * site's own ink/serif register instead of a generic invoice template.
  */
 export function buildWeddingPdf(enquiry: WeddingEnquiry): jsPDF {
   const doc = new jsPDF({ unit: "mm", format: "a4" });
@@ -39,127 +63,190 @@ export function buildWeddingPdf(enquiry: WeddingEnquiry): jsPDF {
   const contentWidth = pageWidth - margin * 2;
   const ink = "#1e2a33";
   const inkSoft = "#5c6a72";
-  const ciel = "#a9c6d8";
-  const poudre = "#e7c3cd";
-  const papier = "#f6f1e8";
+  const hairline = "#c9c2b4";
 
-  // Full-bleed papier ground, then a hairline frame echoing the site's
-  // specimen-plate borders.
-  doc.setFillColor(papier);
-  doc.rect(0, 0, pageWidth, pageHeight, "F");
-  doc.setDrawColor(ink);
-  doc.setLineWidth(0.5);
-  doc.rect(8, 8, pageWidth - 16, pageHeight - 16);
+  const issueDate = new Date();
+  const reference = devisReference(enquiry);
+  const extraGuests = Math.max(enquiry.guests - enquiry.baseGuests, 0);
+  const extraCost = extraGuests * enquiry.pricePerGuest;
+  const total = enquiry.basePrice + extraCost;
 
-  // Header band — powder pink, matching the wedding page's own background.
-  const bandHeight = 34;
-  doc.setFillColor(poudre);
-  doc.rect(8, 8, pageWidth - 16, bandHeight, "F");
-  doc.setDrawColor(ink);
-  doc.setLineWidth(0.4);
-  doc.line(8, 8 + bandHeight, pageWidth - 8, 8 + bandHeight);
+  let y = margin;
 
+  // Letterhead: wordmark + atelier line on the left, devis identity on the right.
   doc.setFont("times", "italic");
-  doc.setFontSize(24);
+  doc.setFontSize(20);
   doc.setTextColor(ink);
-  doc.text("fleur", margin, 8 + bandHeight / 2 + 3);
+  doc.text("fleur", margin, y);
   const fleurWidth = doc.getTextWidth("fleur");
-  doc.text("IA", margin + fleurWidth, 8 + bandHeight / 2 + 3);
+  doc.text("IA", margin + fleurWidth, y);
 
-  doc.setFont("courier", "normal");
-  doc.setFontSize(8);
-  doc.setTextColor(ink);
-  const subhead = "ATELIER FLORAL — CABINET BOTANIQUE";
-  doc.text(subhead, pageWidth - margin - doc.getTextWidth(subhead), 8 + bandHeight / 2 + 3);
-
-  let y = 8 + bandHeight + 16;
-
-  // Title
-  doc.setFont("times", "bolditalic");
-  doc.setFontSize(19);
-  doc.setTextColor(ink);
-  doc.text("Proposition illustrative — Mariage", margin, y);
-
-  y += 6;
-  doc.setFont("times", "normal");
-  doc.setFontSize(10.5);
-  doc.setTextColor(inkSoft);
-  doc.text("Résumé de votre demande, à titre indicatif.", margin, y);
-
-  // Field rows
-  const rows: Array<[string, string]> = [
-    ["COUPLE", enquiry.names || "—"],
-    ["DATE SOUHAITÉE", formatDateFr(enquiry.date)],
-    ["LIEU", enquiry.venue || "—"],
-    ["NOMBRE D'INVITÉS", `${enquiry.guests} personnes`],
-  ];
-
-  y += 12;
-  const labelX = margin;
-  const valueX = margin + 56;
-
-  for (const [label, value] of rows) {
-    doc.setFont("courier", "normal");
-    doc.setFontSize(8.5);
-    doc.setTextColor(inkSoft);
-    doc.text(label, labelX, y);
-
-    doc.setFont("times", "normal");
-    doc.setFontSize(12.5);
-    doc.setTextColor(ink);
-    doc.text(value, valueX, y);
-
-    y += 5;
-    doc.setDrawColor(224, 220, 210);
-    doc.setLineWidth(0.2);
-    doc.line(margin, y, pageWidth - margin, y);
-    y += 7;
-  }
-
-  // Price block — pale blue panel, matching the composer/mariage estimate panels.
-  y += 4;
-  const priceBoxHeight = 30;
-  doc.setFillColor(ciel);
-  doc.rect(margin, y, contentWidth, priceBoxHeight, "F");
-  doc.setDrawColor(ink);
-  doc.setLineWidth(0.4);
-  doc.rect(margin, y, contentWidth, priceBoxHeight);
-
-  doc.setFont("courier", "normal");
-  doc.setFontSize(8.5);
-  doc.setTextColor(ink);
-  doc.text("ENVELOPPE ILLUSTRATIVE", labelX + 6, y + 10);
-
-  doc.setFont("times", "bolditalic");
-  doc.setFontSize(22);
-  doc.text(formatPrice(enquiry.price), labelX + 6, y + 23);
-
-  y += priceBoxHeight + 12;
-
-  // Disclaimer box
-  const boxHeight = 22;
-  doc.setDrawColor(ink);
-  doc.setLineWidth(0.3);
-  doc.rect(margin, y, contentWidth, boxHeight);
-  doc.setFont("times", "italic");
-  doc.setFontSize(9.5);
-  doc.setTextColor(inkSoft);
-  const disclaimer = doc.splitTextToSize(
-    "Cette estimation est illustrative et provient d'un prototype de démonstration : elle n'a pas de valeur contractuelle, ne constitue pas un devis engageant et n'enregistre aucune commande.",
-    contentWidth - 10
-  );
-  doc.text(disclaimer, margin + 5, y + 7);
-
-  // Footer
-  const footerY = pageHeight - 16;
-  doc.setDrawColor(ink);
-  doc.setLineWidth(0.2);
-  doc.line(margin, footerY - 6, pageWidth - margin, footerY - 6);
   doc.setFont("courier", "normal");
   doc.setFontSize(7.5);
   doc.setTextColor(inkSoft);
-  const generatedOn = new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
-  doc.text(`GÉNÉRÉ LE ${generatedOn.toUpperCase()} · FLEURIA.DEMO`, margin, footerY);
+  doc.text("Atelier floral · 14 rue des Tanneurs, 75011 Paris", margin, y + 5);
+  doc.text("SIRET 000 000 000 00000 · contact@fleuria.demo", margin, y + 9);
+
+  doc.setFont("times", "bold");
+  doc.setFontSize(13);
+  doc.setTextColor(ink);
+  doc.text(`DEVIS N° ${reference}`, pageWidth - margin, y - 1, { align: "right" });
+
+  doc.setFont("courier", "normal");
+  doc.setFontSize(8);
+  doc.setTextColor(inkSoft);
+  doc.text(`Émis le ${formatDateFr(issueDate)}`, pageWidth - margin, y + 5, { align: "right" });
+  doc.text(`Valable jusqu'au ${formatDateFr(addDays(issueDate, 30))}`, pageWidth - margin, y + 9, {
+    align: "right",
+  });
+
+  y += 16;
+  doc.setDrawColor(ink);
+  doc.setLineWidth(0.6);
+  doc.line(margin, y, pageWidth - margin, y);
+
+  // Issuer / client two-column block.
+  y += 10;
+  const colWidth = contentWidth / 2 - 6;
+  doc.setFont("courier", "normal");
+  doc.setFontSize(7.5);
+  doc.setTextColor(inkSoft);
+  doc.text("ÉMIS PAR", margin, y);
+  doc.text("DESTINATAIRE", margin + colWidth + 12, y);
+
+  y += 5;
+  doc.setFont("times", "normal");
+  doc.setFontSize(10);
+  doc.setTextColor(ink);
+  const issuerLines = ["fleurIA — atelier floral", "14 rue des Tanneurs, 75011 Paris"];
+  const clientLines = [
+    enquiry.names || "—",
+    `Le ${formatDateFr(enquiry.date)} · ${enquiry.venue || "lieu à préciser"}`,
+    `${enquiry.guests} invités`,
+  ];
+  // Wrap each line to its column width (a long couple name shouldn't run
+  // into or past the client column's own right edge, let alone the page
+  // margin) and track how many wrapped rows the tallest column actually used.
+  let issuerRows = 0;
+  issuerLines.forEach((line) => {
+    const wrapped = doc.splitTextToSize(line, colWidth);
+    doc.text(wrapped, margin, y + issuerRows * 5);
+    issuerRows += wrapped.length;
+  });
+  let clientRows = 0;
+  clientLines.forEach((line) => {
+    const wrapped = doc.splitTextToSize(line, colWidth);
+    doc.text(wrapped, margin + colWidth + 12, y + clientRows * 5);
+    clientRows += wrapped.length;
+  });
+
+  y += Math.max(issuerRows, clientRows) * 5 + 10;
+
+  // Line-item table.
+  const cols = {
+    label: margin,
+    qty: margin + contentWidth * 0.56,
+    unit: margin + contentWidth * 0.72,
+    total: pageWidth - margin,
+  };
+
+  doc.setFont("courier", "normal");
+  doc.setFontSize(7.5);
+  doc.setTextColor(inkSoft);
+  doc.text("DÉSIGNATION", cols.label, y);
+  doc.text("QTÉ", cols.qty, y, { align: "right" });
+  doc.text("PRIX UNIT.", cols.unit, y, { align: "right" });
+  doc.text("TOTAL", cols.total, y, { align: "right" });
+
+  y += 3;
+  doc.setDrawColor(ink);
+  doc.setLineWidth(0.4);
+  doc.line(margin, y, pageWidth - margin, y);
+
+  type Row = { label: string; qty: string; unit: string; total: string };
+  const items: Row[] = [
+    {
+      label: `Scénographie florale de base (jusqu'à ${enquiry.baseGuests} invités)`,
+      qty: "1",
+      unit: formatPrice(enquiry.basePrice),
+      total: formatPrice(enquiry.basePrice),
+    },
+  ];
+  if (extraGuests > 0) {
+    items.push({
+      label: "Invités supplémentaires",
+      qty: String(extraGuests),
+      unit: formatPrice(enquiry.pricePerGuest),
+      total: formatPrice(extraCost),
+    });
+  }
+
+  y += 9;
+  doc.setFont("times", "normal");
+  doc.setFontSize(10);
+  doc.setTextColor(ink);
+  for (const item of items) {
+    const wrapped = doc.splitTextToSize(item.label, cols.qty - cols.label - 8);
+    doc.text(wrapped, cols.label, y);
+    doc.text(item.qty, cols.qty, y, { align: "right" });
+    doc.text(item.unit, cols.unit, y, { align: "right" });
+    doc.text(item.total, cols.total, y, { align: "right" });
+    const rowHeight = Math.max(wrapped.length, 1) * 5 + 4;
+    y += rowHeight;
+    doc.setDrawColor(hairline);
+    doc.setLineWidth(0.2);
+    doc.line(margin, y - 3, pageWidth - margin, y - 3);
+  }
+
+  y += 4;
+  doc.setFont("courier", "normal");
+  doc.setFontSize(8);
+  doc.setTextColor(inkSoft);
+  doc.text("TVA non applicable — art. 293 B du CGI", cols.label, y);
+
+  y += 8;
+  doc.setDrawColor(ink);
+  doc.setLineWidth(0.5);
+  doc.line(margin, y, pageWidth - margin, y);
+  y += 8;
+  doc.setFont("times", "bolditalic");
+  doc.setFontSize(15);
+  doc.setTextColor(ink);
+  doc.text("TOTAL ESTIMÉ", cols.label, y);
+  doc.text(formatPrice(total), cols.total, y, { align: "right" });
+
+  // Signature area.
+  y += 20;
+  const signWidth = contentWidth * 0.42;
+  doc.setFont("courier", "normal");
+  doc.setFontSize(7.5);
+  doc.setTextColor(inkSoft);
+  doc.text("BON POUR ACCORD — DATE ET SIGNATURE", margin, y);
+  doc.setDrawColor(ink);
+  doc.setLineWidth(0.3);
+  doc.line(margin, y + 16, margin + signWidth, y + 16);
+
+  // Conditions.
+  y += 26;
+  doc.setFont("times", "italic");
+  doc.setFontSize(8.5);
+  doc.setTextColor(inkSoft);
+  const disclaimer = doc.splitTextToSize(
+    "Devis établi à titre indicatif et non engageant, généré dans le cadre d'un prototype de démonstration : aucune commande n'est enregistrée. Les tarifs réels dépendront des espèces disponibles à la date de l'événement.",
+    contentWidth
+  );
+  doc.text(disclaimer, margin, y);
+
+  // Footer.
+  const footerY = pageHeight - 14;
+  doc.setDrawColor(hairline);
+  doc.setLineWidth(0.2);
+  doc.line(margin, footerY - 6, pageWidth - margin, footerY - 6);
+  doc.setFont("courier", "normal");
+  doc.setFontSize(7);
+  doc.setTextColor(inkSoft);
+  doc.text(`${reference} · FLEURIA.DEMO`, margin, footerY);
+  doc.text("1/1", pageWidth - margin, footerY, { align: "right" });
 
   return doc;
 }

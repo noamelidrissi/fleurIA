@@ -50,7 +50,15 @@ export default function MariagePage() {
 
   const handleDownloadPdf = () => {
     if (!isValid) return;
-    const doc = buildWeddingPdf({ names, date, venue, guests: weddingGuests, price: weddingStartingPrice });
+    const doc = buildWeddingPdf({
+      names,
+      date,
+      venue,
+      guests: weddingGuests,
+      basePrice: BASE_PRICE,
+      baseGuests: BASE_GUESTS,
+      pricePerGuest: PRICE_PER_GUEST,
+    });
     downloadPdf(doc, `fleuria-mariage-${slugifyNames(names)}.pdf`);
   };
 
