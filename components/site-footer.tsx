@@ -8,8 +8,8 @@ export default function SiteFooter() {
         <p>Un atelier floral pour les grands élans.</p>
       </div>
       <div className="footer-links">
-        <Link href="/catalogue">Cabinet</Link>
-        <Link href="/composer">Générateur</Link>
+        <Link href="/catalogue">Catalogue</Link>
+        <Link href="/composer">Composer</Link>
         <Link href="/mariage">Mariages</Link>
       </div>
       <p className="footer-note">Prototype interactif · les prix et demandes sont illustratifs</p>

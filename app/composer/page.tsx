@@ -1,30 +1,59 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
-import { PlateFrame } from "@/components/plate";
+import { Suspense, useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { BouquetSketch } from "@/components/bouquet-sketch";
 import { ArrowUpRight } from "@/components/icons";
-import { moods, type Mood } from "@/lib/species";
+import { plates, findSpecies, type SpeciesKey } from "@/lib/species";
+
+const BASE_PRICE = 74;
+const STEM_PRICE: Record<SpeciesKey, number> = {
+  hortensia: 18,
+  rose: 19,
+  anemone: 15,
+  iris: 16,
+  cosmos: 14,
+  pivoine: 16,
+};
+const WRAP_PRICE = 18;
+const DELIVERY_PRICE = 16;
+const DEFAULT_SPECIES: SpeciesKey = "pivoine";
 
 export default function ComposerPage() {
+  return (
+    <Suspense fallback={null}>
+      <ComposerContent />
+    </Suspense>
+  );
+}
+
+function ComposerContent() {
   const router = useRouter();
-  const [mood, setMood] = useState<Mood>("peony");
+  const searchParams = useSearchParams();
+  const [species, setSpecies] = useState<SpeciesKey>(DEFAULT_SPECIES);
   const [stemCount, setStemCount] = useState(9);
   const [luxuryWrap, setLuxuryWrap] = useState(true);
   const [delivery, setDelivery] = useState(false);
 
+  useEffect(() => {
+    const requested = findSpecies(searchParams.get("espece"));
+    if (requested) setSpecies(requested.key);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+
+  const current = findSpecies(species) ?? plates[0];
+  const stemsCost = stemCount * STEM_PRICE[species];
   const estimate = useMemo(
-    () =>
-      74 +
-      stemCount * (mood === "hydrangea" ? 18 : mood === "peony" ? 16 : 17) +
-      (luxuryWrap ? 18 : 0) +
-      (delivery ? 16 : 0),
-    [delivery, luxuryWrap, mood, stemCount]
+    () => BASE_PRICE + stemsCost + (luxuryWrap ? WRAP_PRICE : 0) + (delivery ? DELIVERY_PRICE : 0),
+    [delivery, luxuryWrap, stemsCost]
   );
+
+  const formatEur = (value: number) =>
+    value.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
 
   const sendToAtelier = () => {
     router.push(
-      `/catalogue?message=${encodeURIComponent(`Je souhaite réserver la planche ${moods[mood].label}, ${stemCount} tiges.`)}`
+      `/catalogue?message=${encodeURIComponent(`Je souhaite réserver la planche ${current.common}, ${stemCount} tiges.`)}`
     );
   };
 
@@ -37,27 +66,30 @@ export default function ComposerPage() {
         </div>
         <div className="composer-workbench">
           <div className="bouquet-preview">
-            <PlateFrame src={moods[mood].photo} alt={moods[mood].latin} width={640} height={800} priority />
+            <div className="bouquet-sketch-frame">
+              <BouquetSketch species={species} stemCount={stemCount} luxuryWrap={luxuryWrap} />
+            </div>
             <div className="preview-caption">
               <span>Ébauche n° 07</span>
-              <span>{moods[mood].label}</span>
+              <span>{current.common}</span>
             </div>
+            <p className="sketch-note">Croquis génératif de la composition — pas un rendu photoréaliste.</p>
           </div>
           <div className="composer-controls">
             <fieldset>
               <legend>Espèce dominante</legend>
               <div className="mood-options">
-                {(Object.keys(moods) as Mood[]).map((option) => (
+                {plates.map((plate) => (
                   <button
-                    className={mood === option ? "mood-option is-selected" : "mood-option"}
-                    key={option}
+                    className={species === plate.key ? "mood-option is-selected" : "mood-option"}
+                    key={plate.key}
                     type="button"
-                    aria-pressed={mood === option}
-                    onClick={() => setMood(option)}
+                    aria-pressed={species === plate.key}
+                    onClick={() => setSpecies(plate.key)}
                   >
-                    <span className={`mood-swatch ${moods[option].swatch}`} aria-hidden="true" />
-                    <span>{moods[option].label}</span>
-                    <small>{moods[option].detail}</small>
+                    <span className={`mood-swatch ${plate.swatch}`} aria-hidden="true" />
+                    <span>{plate.common}</span>
+                    <small>{plate.detail}</small>
                   </button>
                 ))}
               </div>
@@ -89,7 +121,13 @@ export default function ComposerPage() {
           </div>
           <aside className="estimate-panel" aria-live="polite">
             <span>Estimation bouquet</span>
-            <strong>{estimate.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 })}</strong>
+            <strong>{formatEur(estimate)}</strong>
+            <ul className="estimate-breakdown">
+              <li><span>Base atelier</span><span>{formatEur(BASE_PRICE)}</span></li>
+              <li><span>{stemCount} tiges × {formatEur(STEM_PRICE[species])}</span><span>{formatEur(stemsCost)}</span></li>
+              {luxuryWrap && <li><span>Enveloppe d&apos;atelier</span><span>{formatEur(WRAP_PRICE)}</span></li>}
+              {delivery && <li><span>Livraison à créneau fixe</span><span>{formatEur(DELIVERY_PRICE)}</span></li>}
+            </ul>
             <p>Base illustrative, à confirmer selon les fleurs de saison et le lieu de livraison.</p>
             <button type="button" className="button" onClick={sendToAtelier}>
               Envoyer à l&apos;atelier <ArrowUpRight />

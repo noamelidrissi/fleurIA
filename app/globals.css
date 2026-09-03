@@ -209,7 +209,9 @@ input[type="range"] { accent-color: var(--encre); cursor: pointer; }
 
 .plate-card .plate-frame { aspect-ratio: 1 / 1; }
 
-.plate-card button {
+.plate-card-actions { display: flex; flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+.plate-card-actions button,
+.plate-card-actions a {
   align-self: flex-start;
   display: inline-flex;
   align-items: center;
@@ -224,6 +226,7 @@ input[type="range"] { accent-color: var(--encre); cursor: pointer; }
   text-transform: uppercase;
   padding: 0;
 }
+.plate-card-actions button:disabled { opacity: 0.45; cursor: default; }
 
 /* ---------- Catalogue conversation ---------- */
 
@@ -249,20 +252,50 @@ input[type="range"] { accent-color: var(--encre); cursor: pointer; }
   transition: transform 180ms ease, color 180ms ease;
 }
 .prompt-list button:hover { transform: translateX(0.4rem); }
+.prompt-list button:disabled { opacity: 0.4; cursor: default; transform: none; }
 
 .chat-window { min-height: 520px; padding: clamp(1.25rem, 3vw, 2.2rem); color: var(--papier); background: var(--encre); min-width: 0; }
 .chat-topline { display: flex; align-items: center; gap: 0.6rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(246, 241, 232, 0.2); font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; }
 .presence-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--papier); }
 .chat-status { margin-left: auto; color: rgba(246, 241, 232, 0.55); }
-.messages { display: flex; flex-direction: column; gap: 1.1rem; min-height: 320px; max-height: 420px; padding: 1.4rem 0; overflow: auto; scrollbar-color: var(--papier) transparent; }
+.messages { display: flex; flex-direction: column; gap: 1.1rem; min-height: 320px; max-height: 420px; padding: 1.4rem 0; overflow: auto; scroll-behavior: smooth; scrollbar-color: var(--papier) transparent; }
 .message span { display: block; margin-bottom: 0.3rem; font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(246, 241, 232, 0.5); }
 .message p { margin: 0; line-height: 1.55; }
 .message-visitor { text-align: right; }
 .message-visitor span { text-align: right; }
+.message-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.7rem;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--papier);
+  color: var(--papier);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.typing-dots { display: inline-flex; align-items: center; gap: 4px; height: 1.55em; }
+.typing-dots span:not(.sr-only) {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.3;
+  animation: typing-pulse 1.1s ease-in-out infinite;
+}
+.typing-dots span:nth-child(3) { animation-delay: 0.15s; }
+.typing-dots span:nth-child(4) { animation-delay: 0.3s; }
+@keyframes typing-pulse {
+  0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+  30% { opacity: 0.9; transform: translateY(-2px); }
+}
 .chat-form { display: flex; align-items: center; gap: 0.8rem; padding-top: 1.2rem; border-top: 1px solid rgba(246, 241, 232, 0.2); }
 .chat-form input { flex: 1; min-width: 0; border: 0; border-bottom: 1px solid rgba(246, 241, 232, 0.4); padding: 0.5rem 0; color: var(--papier); background: transparent; font-family: var(--serif); font-size: 0.9rem; }
 .chat-form input::placeholder { color: rgba(246, 241, 232, 0.42); }
 .chat-form button { border: 1px solid var(--papier); background: transparent; color: var(--papier); padding: 0.55rem; display: inline-flex; flex: none; }
+.chat-form button:disabled { opacity: 0.4; cursor: default; }
 .demo-disclaimer { margin: 1rem 0 0; color: rgba(246, 241, 232, 0.5); font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.03em; }
 
 /* ---------- Composer ---------- */
@@ -276,8 +309,17 @@ input[type="range"] { accent-color: var(--encre); cursor: pointer; }
 }
 
 .bouquet-preview { padding: clamp(1.6rem, 3vw, 2.4rem); border-right: 1px solid var(--line); min-width: 0; }
-.bouquet-preview .plate-frame { aspect-ratio: 4 / 5; }
+.bouquet-sketch-frame { aspect-ratio: 4 / 5; padding: 10px; background: var(--papier); border: 1px solid var(--encre); min-width: 0; }
+.bouquet-sketch { display: block; width: 100%; height: 100%; }
 .preview-caption { display: flex; justify-content: space-between; margin-top: 1rem; font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--encre-soft); }
+.sketch-note { margin: 0.5rem 0 0; font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.02em; color: var(--encre-soft); opacity: 0.75; }
+
+.stem-line { transition: d 320ms ease; }
+.bloom-layer { opacity: 0; pointer-events: none; transition: opacity 280ms ease; }
+.bloom-layer.is-active { opacity: 1; }
+.bloom-petal, .bloom-core { transition: transform 320ms ease, cx 320ms ease, cy 320ms ease, r 320ms ease, d 320ms ease; }
+.bouquet-wrap { opacity: 0; transition: opacity 240ms ease; }
+.bouquet-wrap.is-visible { opacity: 1; }
 
 .composer-controls { padding: clamp(1.4rem, 3vw, 2.4rem); border-right: 1px solid var(--line); min-width: 0; }
 .composer-controls fieldset { padding: 0 0 1.8rem; margin: 0 0 1.8rem; border: 0; border-bottom: 1px solid var(--line); }
@@ -285,13 +327,16 @@ input[type="range"] { accent-color: var(--encre); cursor: pointer; }
 .composer-controls legend { display: flex; justify-content: space-between; width: 100%; padding: 0; font-family: var(--mono); font-size: 0.7rem; font-weight: 400; letter-spacing: 0.07em; text-transform: uppercase; }
 .composer-controls output { color: var(--encre); letter-spacing: 0; text-transform: none; font-weight: 700; }
 
-.mood-options { display: flex; flex-direction: column; gap: 0.7rem; margin-top: 1.1rem; }
+.mood-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.7rem; margin-top: 1.1rem; }
 .mood-option { display: grid; grid-template-columns: auto 1fr; column-gap: 0.7rem; row-gap: 0.1rem; align-items: center; padding: 0.6rem 0.7rem; border: 1px solid var(--line); background: none; text-align: left; }
 .mood-option small { grid-column: 2; color: var(--encre-soft); font-size: 0.76rem; }
 .mood-option.is-selected { border-color: var(--encre); border-width: 2px; padding: calc(0.6rem - 1px) calc(0.7rem - 1px); }
 .mood-swatch { width: 14px; height: 14px; border-radius: 50%; border: 1px solid var(--encre); }
 .mood-ciel { background: var(--ciel); }
+.mood-ciel-deep { background: var(--ciel-deep); }
 .mood-poudre { background: var(--poudre); }
+.mood-poudre-deep { background: var(--poudre-deep); }
+.mood-papier-deep { background: var(--papier-deep); }
 .mood-encre { background: var(--encre); }
 
 .stem-field { margin-top: 0.4rem; }
@@ -312,6 +357,10 @@ input[type="range"] { accent-color: var(--encre); cursor: pointer; }
 .estimate-panel p { margin: 0; line-height: 1.5; font-size: 0.82rem; color: var(--ciel-ink); opacity: 0.78; }
 .estimate-panel .button { margin-top: 0.4rem; align-self: flex-start; }
 
+.estimate-breakdown { display: flex; flex-direction: column; gap: 0.4rem; margin: 0; padding: 0.8rem 0; border-top: 1px solid rgba(28, 48, 64, 0.2); border-bottom: 1px solid rgba(28, 48, 64, 0.2); list-style: none; }
+.estimate-breakdown li { display: flex; justify-content: space-between; gap: 1rem; font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.02em; text-transform: none; opacity: 0.85; }
+.estimate-breakdown li span:first-child { text-transform: none; }
+
 /* ---------- Wedding ---------- */
 
 .wedding-section { background: var(--poudre); color: var(--poudre-ink); }
@@ -323,6 +372,10 @@ input[type="range"] { accent-color: var(--encre); cursor: pointer; }
 .wedding-content h2 { font-size: clamp(2.6rem, 4.4vw, 4rem); font-style: italic; line-height: 1; margin: 0 0 1.4rem; }
 .wedding-lede { max-width: 40rem; margin: 0 0 2.4rem; line-height: 1.6; }
 
+.wedding-steps { display: flex; flex-direction: column; gap: 0.65rem; margin: 0 0 2.4rem; padding: 0; list-style: none; }
+.wedding-steps li { display: flex; align-items: baseline; gap: 0.9rem; font-size: 0.86rem; line-height: 1.5; }
+.wedding-steps span { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.05em; color: var(--poudre-ink); opacity: 0.7; }
+
 .wedding-form { border-top: 1px solid rgba(58, 31, 40, 0.3); }
 .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 2rem; }
 .form-grid label { position: relative; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.4rem; padding: 1.1rem 0; border-bottom: 1px solid rgba(58, 31, 40, 0.25); font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--poudre-ink); }
@@ -331,11 +384,18 @@ input[type="range"] { accent-color: var(--encre); cursor: pointer; }
 .form-grid option { color: var(--encre); }
 .form-grid output { color: var(--poudre-ink); font-weight: 700; font-size: 0.68rem; letter-spacing: 0; text-transform: none; }
 .form-grid input[type="range"] { width: 100%; }
+.form-grid input[aria-invalid="true"], .form-grid select[aria-invalid="true"] { border-bottom-color: var(--poudre-ink); border-bottom-width: 2px; }
+.field-error { flex-basis: 100%; order: 3; font-family: var(--serif); font-size: 0.78rem; font-style: italic; text-transform: none; letter-spacing: 0; color: var(--poudre-ink); }
+.range-bounds { display: flex; justify-content: space-between; width: 100%; font-size: 0.62rem; opacity: 0.65; }
 
-.wedding-form-bottom { display: flex; justify-content: space-between; align-items: center; gap: 2rem; padding-top: 1.5rem; flex-wrap: wrap; }
+.wedding-form-bottom { display: flex; justify-content: space-between; align-items: flex-end; gap: 2rem; padding-top: 1.5rem; flex-wrap: wrap; }
 .wedding-form-bottom p { margin: 0; font-size: 0.82rem; line-height: 1.5; }
 .wedding-form-bottom strong { font-style: italic; }
-.wedding-form-bottom .button { flex: none; }
+.price-explainer { margin-top: 0.5rem !important; max-width: 32rem; font-size: 0.74rem !important; opacity: 0.75; }
+.wedding-actions { display: flex; gap: 0.9rem; flex-wrap: wrap; }
+.wedding-actions .button { flex: none; }
+.wedding-actions .button-outline { border-color: var(--poudre-ink); color: var(--poudre-ink); }
+.wedding-actions .button:disabled { opacity: 0.4; cursor: not-allowed; }
 .form-success { margin: 1.4rem 0 0; padding: 0.9rem 1rem; border: 1px solid var(--poudre-ink); font-size: 0.82rem; line-height: 1.5; }
 
 /* ---------- Footer ---------- */
@@ -372,6 +432,7 @@ input[type="range"] { accent-color: var(--encre); cursor: pointer; }
   .estimate-panel { grid-column: auto; }
   .form-grid { grid-template-columns: minmax(0, 1fr); }
   .wedding-form-bottom { flex-direction: column; align-items: flex-start; }
+  .wedding-actions { width: 100%; flex-direction: column; }
   .wedding-form-bottom .button { width: 100%; justify-content: center; }
   .site-footer { grid-template-columns: 1fr; gap: 1.6rem; text-align: left; }
   .footer-note { justify-self: start; text-align: left; }

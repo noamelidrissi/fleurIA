@@ -2,11 +2,17 @@
 
 import { FormEvent, Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { PlateFrame, PlateCaption } from "@/components/plate";
 import { ArrowUpRight } from "@/components/icons";
-import { plates, catalogNotes } from "@/lib/species";
+import { plates, catalogNotes, resolveCatalogueReply, matchSpecies, findSpecies, type SpeciesKey } from "@/lib/species";
 
-type ChatMessage = { author: "assistant" | "visitor"; body: string };
+type ChatMessage = {
+  author: "assistant" | "visitor";
+  body: string;
+  pending?: boolean;
+  species?: SpeciesKey | null;
+};
 
 export default function CataloguePage() {
   return (
@@ -20,18 +26,61 @@ function CatalogueContent() {
   const searchParams = useSearchParams();
   const handledHandoff = useRef(false);
   const [chatInput, setChatInput] = useState("");
+  const [isThinking, setIsThinking] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       author: "assistant",
       body: "Bonjour. Décrivez l’émotion, l’occasion ou une espèce ; je vous orienterai dans le cabinet de l’atelier.",
     },
   ]);
+  const messagesRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const sendCatalogMessage = (message: string) => {
-    const reply =
-      catalogNotes[message] ??
-      "Je retiens cette intention. Pour un résultat juste, l’atelier vous proposera ensuite les espèces disponibles et leur saisonnalité exacte.";
-    setMessages((current) => [...current, { author: "visitor", body: message }, { author: "assistant", body: reply }]);
+  useEffect(() => {
+    const node = messagesRef.current;
+    if (node) node.scrollTop = node.scrollHeight;
+  }, [messages]);
+
+  const sendCatalogMessage = async (message: string) => {
+    if (isThinking) return;
+    setIsThinking(true);
+    const history = [...messages, { author: "visitor" as const, body: message }];
+    setMessages((current) => [
+      ...current,
+      { author: "visitor", body: message },
+      { author: "assistant", body: "", pending: true },
+    ]);
+    inputRef.current?.focus();
+
+    const minDelay = new Promise((resolve) => setTimeout(resolve, 480));
+    let reply: string;
+    let species: SpeciesKey | null = null;
+    try {
+      const [response] = await Promise.all([
+        fetch("/api/catalogue-chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ messages: history }),
+        }),
+        minDelay,
+      ]);
+      if (!response.ok) throw new Error(`status ${response.status}`);
+      const data = await response.json();
+      reply = typeof data.reply === "string" ? data.reply : resolveCatalogueReply(message);
+      species = findSpecies(data.species)?.key ?? null;
+    } catch (error) {
+      console.error("Catalogue chat request failed, using local fallback.", error);
+      await minDelay;
+      reply = resolveCatalogueReply(message);
+      species = matchSpecies(message)?.key ?? null;
+    }
+
+    setMessages((current) =>
+      current.map((entry, index) =>
+        index === current.length - 1 && entry.pending ? { author: "assistant", body: reply, species } : entry
+      )
+    );
+    setIsThinking(false);
   };
 
   useEffect(() => {
@@ -45,7 +94,7 @@ function CatalogueContent() {
   const submitChat = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const message = chatInput.trim();
-    if (!message) return;
+    if (!message || isThinking) return;
     sendCatalogMessage(message);
     setChatInput("");
   };
@@ -62,9 +111,16 @@ function CatalogueContent() {
             <article className={`plate-card ${plate.ground}`} key={plate.key}>
               <PlateFrame src={plate.photo} alt={`${plate.common}, ${plate.latin}`} width={600} height={600} />
               <PlateCaption latin={plate.latin} common={`${plate.common} · ${plate.note}`} accession={plate.accession} />
-              <button type="button" onClick={() => sendCatalogMessage(`Parlez-moi de l’espèce ${plate.common}.`)}>
-                Parler de cette espèce <ArrowUpRight />
-              </button>
+              <div className="plate-card-actions">
+                <button
+                  type="button"
+                  disabled={isThinking}
+                  onClick={() => sendCatalogMessage(`Parlez-moi de l’espèce ${plate.common}.`)}
+                >
+                  Parler de cette espèce <ArrowUpRight />
+                </button>
+                <Link href={`/composer?espece=${plate.key}`}>Composer avec cette espèce <ArrowUpRight /></Link>
+              </div>
             </article>
           ))}
         </div>
@@ -77,7 +133,7 @@ function CatalogueContent() {
             <p>Une couleur à oublier, une espèce à retrouver, une occasion qui ne ressemble à aucune autre : commencez là.</p>
             <div className="prompt-list" aria-label="Suggestions de question">
               {Object.keys(catalogNotes).map((prompt) => (
-                <button type="button" key={prompt} onClick={() => sendCatalogMessage(prompt)}>
+                <button type="button" key={prompt} disabled={isThinking} onClick={() => sendCatalogMessage(prompt)}>
                   {prompt} <ArrowUpRight />
                 </button>
               ))}
@@ -87,25 +143,45 @@ function CatalogueContent() {
             <div className="chat-topline">
               <span className="presence-dot" aria-hidden="true" />
               <span>assistant catalogue</span>
-              <span className="chat-status">En ligne</span>
+              <span className="chat-status">{isThinking ? "Rédige une réponse…" : "En ligne"}</span>
             </div>
-            <div className="messages" aria-live="polite">
-              {messages.map((message, index) => (
-                <div className={`message message-${message.author}`} key={`${message.author}-${index}`}>
-                  <span>{message.author === "assistant" ? "fleurIA" : "vous"}</span>
-                  <p>{message.body}</p>
-                </div>
-              ))}
+            <div className="messages" aria-live="polite" ref={messagesRef}>
+              {messages.map((message, index) => {
+                const recommended = message.species ? findSpecies(message.species) : null;
+                return (
+                  <div className={`message message-${message.author}`} key={`${message.author}-${index}`}>
+                    <span>{message.author === "assistant" ? "fleurIA" : "vous"}</span>
+                    {message.pending ? (
+                      <p className="typing-dots">
+                        <span className="sr-only">fleurIA rédige une réponse…</span>
+                        <span aria-hidden="true" />
+                        <span aria-hidden="true" />
+                        <span aria-hidden="true" />
+                      </p>
+                    ) : (
+                      <>
+                        <p>{message.body}</p>
+                        {recommended && (
+                          <Link className="message-cta" href={`/composer?espece=${recommended.key}`}>
+                            Composer avec {recommended.common.toLowerCase()} <ArrowUpRight />
+                          </Link>
+                        )}
+                      </>
+                    )}
+                  </div>
+                );
+              })}
             </div>
             <form className="chat-form" onSubmit={submitChat}>
               <label className="sr-only" htmlFor="catalogue-question">Votre message</label>
               <input
                 id="catalogue-question"
+                ref={inputRef}
                 value={chatInput}
                 onChange={(event) => setChatInput(event.target.value)}
                 placeholder="Ex. Je veux dire merci, sans rose rouge…"
               />
-              <button type="submit" aria-label="Envoyer la question"><ArrowUpRight /></button>
+              <button type="submit" aria-label="Envoyer la question" disabled={isThinking}><ArrowUpRight /></button>
             </form>
             <p className="demo-disclaimer">Réponses de démonstration : catalogue et disponibilités à connecter.</p>
           </div>

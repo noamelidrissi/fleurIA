@@ -47,6 +47,7 @@ export default function Home() {
             <article className={`plate-card ${plate.ground}`} key={plate.key}>
               <PlateFrame src={plate.photo} alt={`${plate.common}, ${plate.latin}`} width={600} height={600} priority />
               <PlateCaption latin={plate.latin} common={`${plate.common} · ${plate.note}`} accession={plate.accession} />
+              <Link className="text-link" href={`/composer?espece=${plate.key}`}>Composer avec cette espèce <ArrowUpRight /></Link>
             </article>
           ))}
         </div>
@@ -54,23 +55,23 @@ export default function Home() {
 
       <section className="page-frame section-pad">
         <div className="page-intro">
-          <h2>Trois façons<br />de commencer.</h2>
-          <p>Chaque parcours vit sur sa propre page.</p>
+          <h2>Comment<br />procéder.</h2>
+          <p>Pas sûr par où commencer ? Voici comment se déroule une commande.</p>
         </div>
         <div className="feature-index">
           <div className="feature-row">
-            <h3>Le cabinet</h3>
-            <p>Parcourez les espèces disponibles et posez vos questions à l&apos;assistant catalogue.</p>
+            <h3>1. Le cabinet</h3>
+            <p>Pas encore fixé sur une espèce ? Parcourez le cabinet et décrivez votre besoin à l&apos;assistant : il vous oriente vers une espèce précise.</p>
             <Link className="text-link" href="/catalogue">Ouvrir <ArrowUpRight /></Link>
           </div>
           <div className="feature-row">
-            <h3>Le générateur</h3>
-            <p>Choisissez une espèce, une densité, une finition, et recevez une estimation.</p>
+            <h3>2. Le générateur</h3>
+            <p>Choisissez l&apos;espèce, la densité et la finition, puis envoyez votre composition à l&apos;atelier.</p>
             <Link className="text-link" href="/composer">Ouvrir <ArrowUpRight /></Link>
           </div>
           <div className="feature-row">
             <h3>Le mariage</h3>
-            <p>Confiez vos dates et votre lieu, l&apos;atelier compose une première enveloppe.</p>
+            <p>Un projet à plus grande échelle ? Ce parcours est séparé : confiez vos dates et votre lieu, l&apos;atelier compose une première enveloppe.</p>
             <Link className="text-link" href="/mariage">Ouvrir <ArrowUpRight /></Link>
           </div>
         </div>
