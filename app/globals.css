@@ -130,7 +130,7 @@ input[type="range"] { accent-color: var(--encre); cursor: pointer; }
   border: 1px solid var(--encre);
   min-width: 0;
 }
-.plate-frame img { position: absolute; inset: 10px; width: auto; height: auto; object-fit: cover; }
+.plate-frame img { position: absolute; top: 10px; left: 10px; width: calc(100% - 20px); height: calc(100% - 20px); object-fit: cover; }
 
 .plate-caption { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; margin-top: 1rem; }
 .plate-caption .latin { font-style: italic; font-size: 1rem; min-width: 0; }
