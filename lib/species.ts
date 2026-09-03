@@ -7,7 +7,7 @@ export const plates: {
   accession: string;
   note: string;
   detail: string;
-  ground: "plate-card-ciel" | "plate-card-poudre" | "plate-card-papier";
+  ground: "plate-card-ciel" | "plate-card-papier" | "plate-card-rouge";
   photo: string;
   swatch: string;
   talk: string;
@@ -32,7 +32,7 @@ export const plates: {
     accession: "N° 018",
     note: "Parfum ancien, pétale mousseux.",
     detail: "roses et parfums anciens",
-    ground: "plate-card-poudre",
+    ground: "plate-card-papier",
     photo: "/images/specimens/rose.jpg",
     swatch: "mood-poudre-deep",
     talk:
@@ -45,7 +45,7 @@ export const plates: {
     accession: "N° 021",
     note: "Cœur sombre, tige gracile.",
     detail: "anémones et cœurs sombres",
-    ground: "plate-card-papier",
+    ground: "plate-card-rouge",
     photo: "/images/specimens/anemone.jpg",
     swatch: "mood-encre",
     talk:
@@ -71,7 +71,7 @@ export const plates: {
     accession: "N° 031",
     note: "Silhouette légère, feuillage fin.",
     detail: "cosmos et silhouette légère",
-    ground: "plate-card-poudre",
+    ground: "plate-card-papier",
     photo: "/images/specimens/cosmos.jpg",
     swatch: "mood-papier-deep",
     talk:
@@ -84,7 +84,7 @@ export const plates: {
     accession: "N° 014",
     note: "Carnations poudrées, tenue courte.",
     detail: "pivoines et carnations poudrées",
-    ground: "plate-card-papier",
+    ground: "plate-card-rouge",
     photo: "/images/specimens/peony.jpg",
     swatch: "mood-poudre",
     talk:

@@ -5,6 +5,9 @@
   --poudre: #e7c3cd;
   --poudre-deep: #c98ea0;
   --poudre-ink: #3a1f28;
+  --rouge: #dba99a;
+  --rouge-deep: #c07f6c;
+  --rouge-ink: #3d1f16;
   --encre: #1e2a33;
   --encre-soft: rgba(30, 42, 51, 0.76);
   --papier: #f6f1e8;
@@ -208,8 +211,8 @@ input[type="range"] { accent-color: var(--encre); cursor: pointer; }
 
 .plate-card { padding: clamp(1.6rem, 2.6vw, 2.4rem); display: flex; flex-direction: column; gap: 1.2rem; min-width: 0; }
 .plate-card-ciel { background: var(--ciel); color: var(--ciel-ink); }
-.plate-card-poudre { background: var(--poudre); color: var(--poudre-ink); }
 .plate-card-papier { background: var(--papier); color: var(--encre); }
+.plate-card-rouge { background: var(--rouge); color: var(--rouge-ink); }
 
 .plate-card .plate-frame { aspect-ratio: 1 / 1; }
 
