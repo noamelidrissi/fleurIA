@@ -34,12 +34,17 @@ function ComposerContent() {
   const [stemCount, setStemCount] = useState(9);
   const [luxuryWrap, setLuxuryWrap] = useState(true);
   const [delivery, setDelivery] = useState(false);
+  const [purchased, setPurchased] = useState(false);
 
   useEffect(() => {
     const requested = findSpecies(searchParams.get("espece"));
     if (requested) setSpecies(requested.key);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
+
+  useEffect(() => {
+    setPurchased(false);
+  }, [species, stemCount, luxuryWrap, delivery]);
 
   const current = findSpecies(species) ?? plates[0];
   const stemsCost = stemCount * STEM_PRICE[species];
@@ -51,9 +56,13 @@ function ComposerContent() {
   const formatEur = (value: number) =>
     value.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
 
-  const sendToAtelier = () => {
+  const buyBouquet = () => {
+    setPurchased(true);
+  };
+
+  const askAtelier = () => {
     router.push(
-      `/catalogue?message=${encodeURIComponent(`Je souhaite réserver la planche ${current.common}, ${stemCount} tiges.`)}`
+      `/catalogue?message=${encodeURIComponent(`J’ai une question sur la planche ${current.common}, ${stemCount} tiges.`)}`
     );
   };
 
@@ -129,9 +138,20 @@ function ComposerContent() {
               {delivery && <li><span>Livraison à créneau fixe</span><span>{formatEur(DELIVERY_PRICE)}</span></li>}
             </ul>
             <p>Base illustrative, à confirmer selon les fleurs de saison et le lieu de livraison.</p>
-            <button type="button" className="button" onClick={sendToAtelier}>
-              Envoyer à l&apos;atelier <ArrowUpRight />
-            </button>
+            {purchased ? (
+              <p className="form-success" role="status">
+                Commande enregistrée : {current.common}, {stemCount} tiges, {formatEur(estimate)}. Ceci reste une démonstration — aucun paiement n&apos;est réellement effectué.
+              </p>
+            ) : (
+              <div className="composer-actions">
+                <button type="button" className="button" onClick={buyBouquet}>
+                  Acheter ce bouquet <ArrowUpRight />
+                </button>
+                <button type="button" className="text-link" onClick={askAtelier}>
+                  Une question ? Écrire à l&apos;atelier
+                </button>
+              </div>
+            )}
           </aside>
         </div>
       </section>

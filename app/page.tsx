@@ -28,7 +28,10 @@ export default function Home() {
             </div>
           </div>
           <figure className="hero-plate">
-            <PlateFrame src="/images/specimens/peony.jpg" alt="Pivoine, Paeonia lactiflora" width={800} height={1000} priority />
+            <PlateFrame src="/images/atelier/wrapping.jpg" alt="L'atelier compose un bouquet à la main" width={800} height={1000} priority />
+            <div className="hero-inset">
+              <PlateFrame src="/images/specimens/peony.jpg" alt="Pivoine, Paeonia lactiflora" width={400} height={500} priority />
+            </div>
           </figure>
         </div>
         <div className="page-frame hero-scroll">
