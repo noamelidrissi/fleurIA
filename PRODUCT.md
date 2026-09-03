@@ -16,7 +16,7 @@ fleurIA est la vitrine et l'atelier numérique d'un fleuriste haut de gamme. Le 
 
 ## Positioning
 
-Un fleuriste à budget créatif illimité où le catalogue devient conversation, le devis mariage devient une expérience de création et chaque bouquet est composé comme une constellation.
+Un fleuriste à budget créatif illimité où le catalogue devient conversation, le devis mariage devient une expérience de création et chaque bouquet est documenté comme une planche botanique.
 
 ## Operating Context
 
@@ -28,12 +28,12 @@ Le visiteur découvre des collections, échange avec un assistant de catalogue, 
 - Simulateur de prix de bouquet.
 - Générateur de bouquet personnalisable.
 - Parcours de devis pour mariage.
-- Direction de marque explicitement demandée : cosmique / spatial, très haut de gamme et sans contrainte de budget.
+- Direction de marque explicitement demandée : cabinet botanique / planche de spécimen (bleu pâle et rose poudré, jamais l'esthétique attendue d'un site de fleuriste), très haut de gamme et sans contrainte de budget.
 - Les réponses conversationnelles, prix, disponibilités et devis sont des démonstrations locales tant qu'aucun service métier n'est branché.
 
 ## Brand Commitments
 
-Nom de travail : fleurIA. Ton poétique, précis et contemporain ; l'univers spatial doit révéler le savoir-faire floral plutôt que masquer les fleurs derrière une esthétique technologique.
+Nom de travail : fleurIA. Ton poétique, précis et contemporain ; l'univers du cabinet botanique (planches, noms latins, numéros d'accession) doit révéler le savoir-faire floral sans jamais reproduire l'esthétique attendue d'un site de fleuriste.
 
 ## Evidence on Hand
 

@@ -1,0 +1,15 @@
+export function ArrowUpRight() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="icon" fill="none" stroke="currentColor" strokeWidth="1.7">
+      <path d="M5 19 19 5M8 5h11v11" />
+    </svg>
+  );
+}
+
+export function MenuIcon({ open }: { open: boolean }) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="icon" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round">
+      {open ? <path d="M6 6l12 12M18 6 6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
+    </svg>
+  );
+}
