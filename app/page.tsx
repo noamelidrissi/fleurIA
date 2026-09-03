@@ -20,7 +20,7 @@ export default function Home() {
               <Link className="button" href="/composer">
                 Composer mon bouquet <ArrowUpRight />
               </Link>
-              <Link className="text-link" href="/catalogue">Découvrir le cabinet</Link>
+              <Link className="text-link" href="/catalogue">Découvrir nos fleurs</Link>
             </div>
             <div className="meta-line">
               <span>Aujourd&apos;hui : Pivoine</span>
@@ -35,15 +35,15 @@ export default function Home() {
           </figure>
         </div>
         <div className="page-frame hero-scroll">
-          <span>Faire défiler pour voir les espèces</span>
-          <Link href="/catalogue">Voir le cabinet complet <ArrowUpRight /></Link>
+          <span>Faire défiler pour découvrir nos fleurs</span>
+          <Link href="/catalogue">Voir toutes nos fleurs <ArrowUpRight /></Link>
         </div>
       </section>
 
       <section className="page-frame section-pad">
         <div className="page-intro">
-          <h2>Trois espèces<br />en ce moment.</h2>
-          <p>Un aperçu du cabinet. Les six planches et leur provenance sont réunies au complet dans le cabinet.</p>
+          <h2>Trois fleurs<br />en ce moment.</h2>
+          <p>Un aperçu de notre sélection. Les six fleurs disponibles ce mois-ci, avec leur origine, sont réunies dans notre catalogue complet.</p>
         </div>
         <div className="plates-grid">
           {featured.map((plate) => (
@@ -63,19 +63,19 @@ export default function Home() {
         </div>
         <div className="feature-index">
           <div className="feature-row">
-            <h3>1. Le cabinet</h3>
-            <p>Pas encore fixé sur une espèce ? Parcourez le cabinet et décrivez votre besoin à l&apos;assistant : il vous oriente vers une espèce précise.</p>
-            <Link className="text-link" href="/catalogue">Ouvrir <ArrowUpRight /></Link>
+            <h3>1. Choisir une fleur</h3>
+            <p>Pas encore décidé ? Parcourez notre catalogue de fleurs et décrivez votre envie à l&apos;assistant : il vous aide à choisir.</p>
+            <Link className="text-link" href="/catalogue">Voir le catalogue <ArrowUpRight /></Link>
           </div>
           <div className="feature-row">
-            <h3>2. Le générateur</h3>
-            <p>Choisissez l&apos;espèce, la densité et la finition, puis envoyez votre composition à l&apos;atelier.</p>
-            <Link className="text-link" href="/composer">Ouvrir <ArrowUpRight /></Link>
+            <h3>2. Composer votre bouquet</h3>
+            <p>Choisissez la fleur, le nombre de tiges et la finition, puis achetez votre bouquet directement en ligne.</p>
+            <Link className="text-link" href="/composer">Composer <ArrowUpRight /></Link>
           </div>
           <div className="feature-row">
-            <h3>Le mariage</h3>
-            <p>Un projet à plus grande échelle ? Ce parcours est séparé : confiez vos dates et votre lieu, l&apos;atelier compose une première enveloppe.</p>
-            <Link className="text-link" href="/mariage">Ouvrir <ArrowUpRight /></Link>
+            <h3>Organiser un mariage</h3>
+            <p>Un projet à plus grande échelle ? Ce parcours est séparé : confiez-nous vos dates et votre lieu, nous vous envoyons un premier devis estimatif.</p>
+            <Link className="text-link" href="/mariage">Faire une demande <ArrowUpRight /></Link>
           </div>
         </div>
       </section>
