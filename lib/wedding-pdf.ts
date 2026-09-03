@@ -25,38 +25,56 @@ function formatPrice(value: number): string {
 
 /**
  * Builds a client-side PDF summary of an illustrative wedding enquiry.
- * Runs entirely in the browser (jsPDF), no backend involved.
+ * Runs entirely in the browser (jsPDF), no backend involved. Carries the
+ * site's own palette (the pale blue/powder pink/ink tokens from
+ * app/globals.css, hand-copied here since a PDF can't read CSS custom
+ * properties) so the document reads as the same object as the page it
+ * came from rather than a generic black-on-white printout.
  */
 export function buildWeddingPdf(enquiry: WeddingEnquiry): jsPDF {
   const doc = new jsPDF({ unit: "mm", format: "a4" });
   const pageWidth = doc.internal.pageSize.getWidth();
-  const margin = 24;
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const margin = 20;
   const contentWidth = pageWidth - margin * 2;
   const ink = "#1e2a33";
   const inkSoft = "#5c6a72";
-  let y = 28;
+  const ciel = "#a9c6d8";
+  const poudre = "#e7c3cd";
+  const papier = "#f6f1e8";
 
-  // Header — wordmark
-  doc.setFont("times", "italic");
-  doc.setFontSize(26);
-  doc.setTextColor(ink);
-  doc.text("fleur", margin, y);
-  const fleurWidth = doc.getTextWidth("fleur");
-  doc.setFont("times", "italic");
-  doc.text("IA", margin + fleurWidth, y);
+  // Full-bleed papier ground, then a hairline frame echoing the site's
+  // specimen-plate borders.
+  doc.setFillColor(papier);
+  doc.rect(0, 0, pageWidth, pageHeight, "F");
+  doc.setDrawColor(ink);
+  doc.setLineWidth(0.5);
+  doc.rect(8, 8, pageWidth - 16, pageHeight - 16);
 
-  doc.setFont("courier", "normal");
-  doc.setFontSize(8.5);
-  doc.setTextColor(inkSoft);
-  doc.text("ATELIER FLORAL — PROTOTYPE DE DÉMONSTRATION", margin, y + 6);
-
-  y += 12;
+  // Header band — powder pink, matching the wedding page's own background.
+  const bandHeight = 34;
+  doc.setFillColor(poudre);
+  doc.rect(8, 8, pageWidth - 16, bandHeight, "F");
   doc.setDrawColor(ink);
   doc.setLineWidth(0.4);
-  doc.line(margin, y, pageWidth - margin, y);
+  doc.line(8, 8 + bandHeight, pageWidth - 8, 8 + bandHeight);
+
+  doc.setFont("times", "italic");
+  doc.setFontSize(24);
+  doc.setTextColor(ink);
+  doc.text("fleur", margin, 8 + bandHeight / 2 + 3);
+  const fleurWidth = doc.getTextWidth("fleur");
+  doc.text("IA", margin + fleurWidth, 8 + bandHeight / 2 + 3);
+
+  doc.setFont("courier", "normal");
+  doc.setFontSize(8);
+  doc.setTextColor(ink);
+  const subhead = "ATELIER FLORAL — CABINET BOTANIQUE";
+  doc.text(subhead, pageWidth - margin - doc.getTextWidth(subhead), 8 + bandHeight / 2 + 3);
+
+  let y = 8 + bandHeight + 16;
 
   // Title
-  y += 14;
   doc.setFont("times", "bolditalic");
   doc.setFontSize(19);
   doc.setTextColor(ink);
@@ -76,7 +94,7 @@ export function buildWeddingPdf(enquiry: WeddingEnquiry): jsPDF {
     ["NOMBRE D'INVITÉS", `${enquiry.guests} personnes`],
   ];
 
-  y += 14;
+  y += 12;
   const labelX = margin;
   const valueX = margin + 56;
 
@@ -95,24 +113,30 @@ export function buildWeddingPdf(enquiry: WeddingEnquiry): jsPDF {
     doc.setDrawColor(224, 220, 210);
     doc.setLineWidth(0.2);
     doc.line(margin, y, pageWidth - margin, y);
-    y += 8;
+    y += 7;
   }
 
-  // Price block
+  // Price block — pale blue panel, matching the composer/mariage estimate panels.
   y += 4;
+  const priceBoxHeight = 30;
+  doc.setFillColor(ciel);
+  doc.rect(margin, y, contentWidth, priceBoxHeight, "F");
+  doc.setDrawColor(ink);
+  doc.setLineWidth(0.4);
+  doc.rect(margin, y, contentWidth, priceBoxHeight);
+
   doc.setFont("courier", "normal");
   doc.setFontSize(8.5);
-  doc.setTextColor(inkSoft);
-  doc.text("ENVELOPPE ILLUSTRATIVE", labelX, y);
+  doc.setTextColor(ink);
+  doc.text("ENVELOPPE ILLUSTRATIVE", labelX + 6, y + 10);
 
-  y += 9;
   doc.setFont("times", "bolditalic");
   doc.setFontSize(22);
-  doc.setTextColor(ink);
-  doc.text(formatPrice(enquiry.price), labelX, y);
+  doc.text(formatPrice(enquiry.price), labelX + 6, y + 23);
+
+  y += priceBoxHeight + 12;
 
   // Disclaimer box
-  y += 14;
   const boxHeight = 22;
   doc.setDrawColor(ink);
   doc.setLineWidth(0.3);
@@ -127,7 +151,7 @@ export function buildWeddingPdf(enquiry: WeddingEnquiry): jsPDF {
   doc.text(disclaimer, margin + 5, y + 7);
 
   // Footer
-  const footerY = doc.internal.pageSize.getHeight() - 16;
+  const footerY = pageHeight - 16;
   doc.setDrawColor(ink);
   doc.setLineWidth(0.2);
   doc.line(margin, footerY - 6, pageWidth - margin, footerY - 6);
