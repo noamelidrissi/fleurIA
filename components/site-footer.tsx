@@ -12,7 +12,6 @@ export default function SiteFooter() {
         <Link href="/composer">Composer</Link>
         <Link href="/mariage">Mariages</Link>
       </div>
-      <p className="footer-note">Prototype interactif · les prix et demandes sont illustratifs</p>
     </footer>
   );
 }
