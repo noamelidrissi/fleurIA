@@ -11,7 +11,7 @@ export default function Home() {
       <section className="page-hero">
         <div className="page-frame specimen-hero">
           <div className="specimen-lead">
-            <h1>L&apos;art d&apos;offrir,<br />une fleur à la fois.</h1>
+            <h1>Le bouquet<br />à votre image.</h1>
             <p className="lede">
               fleurIA compose votre bouquet à partir d&apos;espèces choisies et documentées avec soin,
               pour une déclaration, un mariage ou simplement pour dire merci.

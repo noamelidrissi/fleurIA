@@ -65,7 +65,7 @@ input[type="range"] { accent-color: var(--encre); cursor: pointer; }
 
 .label-mono {
   font-family: var(--mono);
-  font-size: 0.72rem;
+  font-size: 0.84rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -100,10 +100,10 @@ input[type="range"] { accent-color: var(--encre); cursor: pointer; }
 .menu-toggle .icon { width: 1.4em; height: 1.4em; }
 
 .main-nav { display: flex; justify-content: flex-end; align-items: center; gap: 2.2rem; grid-column: 3; }
-.main-nav a:not(.nav-cta) { font-family: var(--mono); font-size: 0.76rem; letter-spacing: 0.06em; text-transform: uppercase; padding-bottom: 4px; border-bottom: 2px solid transparent; }
+.main-nav a:not(.nav-cta) { font-family: var(--mono); font-size: 0.88rem; letter-spacing: 0.06em; text-transform: uppercase; padding-bottom: 4px; border-bottom: 2px solid transparent; }
 .main-nav a:not(.nav-cta):hover { border-color: var(--line); }
 .main-nav a.is-active { border-color: var(--encre); font-weight: 700; }
-.nav-cta { padding: 0.6rem 1.2rem; font-size: 0.72rem; }
+.nav-cta { padding: 0.6rem 1.2rem; font-size: 0.84rem; }
 
 /* ---------- Buttons / links ---------- */
 
@@ -116,12 +116,12 @@ input[type="range"] { accent-color: var(--encre); cursor: pointer; }
   background: var(--encre);
   color: var(--papier);
   font-family: var(--mono);
-  font-size: 0.74rem;
+  font-size: 0.86rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 .button-outline { background: transparent; color: inherit; border-color: currentColor; }
-.text-link { font-family: var(--mono); font-size: 0.74rem; letter-spacing: 0.06em; text-transform: uppercase; border-bottom: 1px solid currentColor; padding-bottom: 2px; }
+.text-link { font-family: var(--mono); font-size: 0.86rem; letter-spacing: 0.06em; text-transform: uppercase; border-bottom: 2px solid currentColor; padding-bottom: 2px; }
 
 /* ---------- Specimen plate (reused across pages) ---------- */
 
@@ -137,8 +137,8 @@ input[type="range"] { accent-color: var(--encre); cursor: pointer; }
 
 .plate-caption { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; margin-top: 1rem; }
 .plate-caption .latin { font-style: italic; font-size: 1rem; min-width: 0; }
-.plate-caption .common { display: block; font-style: normal; font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--encre-soft); margin-top: 0.3rem; }
-.plate-caption .accession { font-family: var(--mono); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.04em; text-align: right; color: var(--encre); white-space: nowrap; }
+.plate-caption .common { display: block; font-style: normal; font-family: var(--mono); font-size: 0.76rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--encre-soft); margin-top: 0.3rem; }
+.plate-caption .accession { font-family: var(--mono); font-size: 0.79rem; font-weight: 700; letter-spacing: 0.04em; text-align: right; color: var(--encre); white-space: nowrap; }
 
 /* ---------- Page hero (shared shape, used per-page) ---------- */
 
@@ -158,7 +158,7 @@ input[type="range"] { accent-color: var(--encre); cursor: pointer; }
 .specimen-lead h1 { margin: 0 0 1.2rem; font-style: italic; font-size: clamp(2.8rem, 5.2vw, 4.8rem); line-height: 0.98; letter-spacing: -0.01em; }
 .specimen-lead p.lede { max-width: 42ch; margin: 0 0 2rem; line-height: 1.6; }
 .specimen-lead .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1.6rem; margin-bottom: 2.4rem; }
-.specimen-lead .meta-line { display: flex; flex-wrap: wrap; gap: 0.5rem 1.2rem; padding-top: 1.4rem; border-top: 1px solid rgba(28, 48, 64, 0.2); font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.05em; text-transform: uppercase; opacity: 0.65; }
+.specimen-lead .meta-line { display: flex; flex-wrap: wrap; gap: 0.5rem 1.2rem; padding-top: 1.4rem; border-top: 1px solid rgba(28, 48, 64, 0.2); font-family: var(--mono); font-size: 0.79rem; letter-spacing: 0.05em; text-transform: uppercase; opacity: 0.65; }
 
 .hero-plate { position: relative; }
 .hero-plate .plate-frame { aspect-ratio: 4 / 5; }
@@ -172,7 +172,7 @@ input[type="range"] { accent-color: var(--encre); cursor: pointer; }
   padding-block: 1.2rem;
   border-top: 1px solid rgba(28, 48, 64, 0.25);
   font-family: var(--mono);
-  font-size: 0.68rem;
+  font-size: 0.79rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -224,11 +224,11 @@ input[type="range"] { accent-color: var(--encre); cursor: pointer; }
   align-items: center;
   gap: 0.5rem;
   border: 0;
-  border-bottom: 1px solid currentColor;
+  border-bottom: 2px solid currentColor;
   background: none;
   color: inherit;
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.82rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   padding: 0;
@@ -254,7 +254,7 @@ input[type="range"] { accent-color: var(--encre); cursor: pointer; }
   color: var(--encre);
   background: transparent;
   font-family: var(--serif);
-  font-size: 0.92rem;
+  font-size: 1.02rem;
   text-align: left;
   transition: transform 180ms ease, color 180ms ease;
 }
@@ -262,11 +262,11 @@ input[type="range"] { accent-color: var(--encre); cursor: pointer; }
 .prompt-list button:disabled { opacity: 0.4; cursor: default; transform: none; }
 
 .chat-window { min-height: 520px; padding: clamp(1.25rem, 3vw, 2.2rem); color: var(--papier); background: var(--encre); min-width: 0; }
-.chat-topline { display: flex; align-items: center; gap: 0.6rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(246, 241, 232, 0.2); font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.chat-topline { display: flex; align-items: center; gap: 0.6rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(246, 241, 232, 0.2); font-family: var(--mono); font-size: 0.79rem; letter-spacing: 0.06em; text-transform: uppercase; }
 .presence-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--papier); }
 .chat-status { margin-left: auto; color: rgba(246, 241, 232, 0.55); }
 .messages { display: flex; flex-direction: column; gap: 1.1rem; min-height: 320px; max-height: 420px; padding: 1.4rem 0; overflow: auto; scroll-behavior: smooth; scrollbar-color: var(--papier) transparent; }
-.message span { display: block; margin-bottom: 0.3rem; font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(246, 241, 232, 0.5); }
+.message span { display: block; margin-bottom: 0.3rem; font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(246, 241, 232, 0.5); }
 .message p { margin: 0; line-height: 1.55; }
 .message-visitor { text-align: right; }
 .message-visitor span { text-align: right; }
@@ -279,7 +279,7 @@ input[type="range"] { accent-color: var(--encre); cursor: pointer; }
   border: 1px solid var(--papier);
   color: var(--papier);
   font-family: var(--mono);
-  font-size: 0.68rem;
+  font-size: 0.79rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
@@ -299,11 +299,11 @@ input[type="range"] { accent-color: var(--encre); cursor: pointer; }
   30% { opacity: 0.9; transform: translateY(-2px); }
 }
 .chat-form { display: flex; align-items: center; gap: 0.8rem; padding-top: 1.2rem; border-top: 1px solid rgba(246, 241, 232, 0.2); }
-.chat-form input { flex: 1; min-width: 0; border: 0; border-bottom: 1px solid rgba(246, 241, 232, 0.4); padding: 0.5rem 0; color: var(--papier); background: transparent; font-family: var(--serif); font-size: 0.9rem; }
+.chat-form input { flex: 1; min-width: 0; border: 0; border-bottom: 1px solid rgba(246, 241, 232, 0.4); padding: 0.5rem 0; color: var(--papier); background: transparent; font-family: var(--serif); font-size: 1rem; }
 .chat-form input::placeholder { color: rgba(246, 241, 232, 0.42); }
 .chat-form button { border: 1px solid var(--papier); background: transparent; color: var(--papier); padding: 0.55rem; display: inline-flex; flex: none; }
 .chat-form button:disabled { opacity: 0.4; cursor: default; }
-.demo-disclaimer { margin: 1rem 0 0; color: rgba(246, 241, 232, 0.5); font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.03em; }
+.demo-disclaimer { margin: 1rem 0 0; color: rgba(246, 241, 232, 0.5); font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.03em; }
 
 /* ---------- Composer ---------- */
 
@@ -318,8 +318,8 @@ input[type="range"] { accent-color: var(--encre); cursor: pointer; }
 .bouquet-preview { padding: clamp(1.6rem, 3vw, 2.4rem); border-right: 1px solid var(--line); min-width: 0; }
 .bouquet-sketch-frame { aspect-ratio: 4 / 5; padding: 10px; background: var(--papier); border: 1px solid var(--encre); min-width: 0; }
 .bouquet-sketch { display: block; width: 100%; height: 100%; }
-.preview-caption { display: flex; justify-content: space-between; margin-top: 1rem; font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--encre-soft); }
-.sketch-note { margin: 0.5rem 0 0; font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.02em; color: var(--encre-soft); opacity: 0.75; }
+.preview-caption { display: flex; justify-content: space-between; margin-top: 1rem; font-family: var(--mono); font-size: 0.79rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--encre-soft); }
+.sketch-note { margin: 0.5rem 0 0; font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.02em; color: var(--encre-soft); opacity: 0.75; }
 
 .stem-line { transition: d 320ms ease; }
 .bloom-layer { opacity: 0; pointer-events: none; transition: opacity 280ms ease; }
@@ -331,12 +331,12 @@ input[type="range"] { accent-color: var(--encre); cursor: pointer; }
 .composer-controls { padding: clamp(1.4rem, 3vw, 2.4rem); border-right: 1px solid var(--line); min-width: 0; }
 .composer-controls fieldset { padding: 0 0 1.8rem; margin: 0 0 1.8rem; border: 0; border-bottom: 1px solid var(--line); }
 .composer-controls fieldset:last-of-type { margin-bottom: 1.6rem; }
-.composer-controls legend { display: flex; justify-content: space-between; width: 100%; padding: 0; font-family: var(--mono); font-size: 0.7rem; font-weight: 400; letter-spacing: 0.07em; text-transform: uppercase; }
+.composer-controls legend { display: flex; justify-content: space-between; width: 100%; padding: 0; font-family: var(--mono); font-size: 0.82rem; font-weight: 400; letter-spacing: 0.07em; text-transform: uppercase; }
 .composer-controls output { color: var(--encre); letter-spacing: 0; text-transform: none; font-weight: 700; }
 
 .mood-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.7rem; margin-top: 1.1rem; }
 .mood-option { display: grid; grid-template-columns: auto 1fr; column-gap: 0.7rem; row-gap: 0.1rem; align-items: center; padding: 0.6rem 0.7rem; border: 1px solid var(--line); background: none; text-align: left; }
-.mood-option small { grid-column: 2; color: var(--encre-soft); font-size: 0.76rem; }
+.mood-option small { grid-column: 2; color: var(--encre-soft); font-size: 0.88rem; }
 .mood-option.is-selected { border-color: var(--encre); border-width: 2px; padding: calc(0.6rem - 1px) calc(0.7rem - 1px); }
 .mood-swatch { width: 14px; height: 14px; border-radius: 50%; border: 1px solid var(--encre); }
 .mood-ciel { background: var(--ciel); }
@@ -347,26 +347,26 @@ input[type="range"] { accent-color: var(--encre); cursor: pointer; }
 .mood-encre { background: var(--encre); }
 
 .stem-field { margin-top: 0.4rem; }
-.range-labels { display: flex; justify-content: space-between; margin-top: 0.5rem; font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--encre-soft); }
+.range-labels { display: flex; justify-content: space-between; margin-top: 0.5rem; font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--encre-soft); }
 
 .switches { display: flex; flex-direction: column; gap: 1rem; }
 .switch-line { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 1rem; }
-.switch-line strong { display: block; font-family: var(--mono); font-size: 0.74rem; letter-spacing: 0.03em; text-transform: none; }
-.switch-line small { color: var(--encre-soft); font-size: 0.76rem; }
+.switch-line strong { display: block; font-family: var(--mono); font-size: 0.86rem; letter-spacing: 0.03em; text-transform: none; }
+.switch-line small { color: var(--encre-soft); font-size: 0.88rem; }
 .switch-line input { position: absolute; opacity: 0; }
 .switch-line i { position: relative; width: 38px; height: 20px; border: 1px solid var(--encre); display: block; }
 .switch-line i::after { content: ""; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; background: var(--encre); transition: transform 160ms ease; }
 .switch-line input:checked + i::after { transform: translateX(16px); }
 
 .estimate-panel { padding: clamp(1.6rem, 3vw, 2.4rem); display: flex; flex-direction: column; gap: 0.9rem; background: var(--ciel); color: var(--ciel-ink); min-width: 0; }
-.estimate-panel span { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.estimate-panel span { font-family: var(--mono); font-size: 0.82rem; letter-spacing: 0.06em; text-transform: uppercase; }
 .estimate-panel strong { font-family: var(--serif); font-style: italic; font-size: 2.4rem; }
-.estimate-panel p { margin: 0; line-height: 1.5; font-size: 0.82rem; color: var(--ciel-ink); opacity: 0.78; }
+.estimate-panel p { margin: 0; line-height: 1.5; font-size: 0.93rem; color: var(--ciel-ink); opacity: 0.78; }
 .estimate-panel .button { margin-top: 0.4rem; align-self: flex-start; }
 .composer-actions { display: flex; flex-direction: column; align-items: flex-start; gap: 0.7rem; }
 
 .estimate-breakdown { display: flex; flex-direction: column; gap: 0.4rem; margin: 0; padding: 0.8rem 0; border-top: 1px solid rgba(28, 48, 64, 0.2); border-bottom: 1px solid rgba(28, 48, 64, 0.2); list-style: none; }
-.estimate-breakdown li { display: flex; justify-content: space-between; gap: 1rem; font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.02em; text-transform: none; opacity: 0.85; }
+.estimate-breakdown li { display: flex; justify-content: space-between; gap: 1rem; font-family: var(--mono); font-size: 0.82rem; letter-spacing: 0.02em; text-transform: none; opacity: 0.85; }
 .estimate-breakdown li span:first-child { text-transform: none; }
 
 /* ---------- Wedding ---------- */
@@ -381,37 +381,37 @@ input[type="range"] { accent-color: var(--encre); cursor: pointer; }
 .wedding-lede { max-width: 40rem; margin: 0 0 2.4rem; line-height: 1.6; }
 
 .wedding-steps { display: flex; flex-direction: column; gap: 0.65rem; margin: 0 0 2.4rem; padding: 0; list-style: none; }
-.wedding-steps li { display: flex; align-items: baseline; gap: 0.9rem; font-size: 0.86rem; line-height: 1.5; }
-.wedding-steps span { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.05em; color: var(--poudre-ink); opacity: 0.7; }
+.wedding-steps li { display: flex; align-items: baseline; gap: 0.9rem; font-size: 0.95rem; line-height: 1.5; }
+.wedding-steps span { font-family: var(--mono); font-size: 0.79rem; letter-spacing: 0.05em; color: var(--poudre-ink); opacity: 0.7; }
 
 .wedding-form { border-top: 1px solid rgba(58, 31, 40, 0.3); }
 .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 2rem; }
-.form-grid label { position: relative; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.4rem; padding: 1.1rem 0; border-bottom: 1px solid rgba(58, 31, 40, 0.25); font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--poudre-ink); }
-.form-grid input:not([type="range"]), .form-grid select { width: 100%; padding: 0.35rem 0; border: 0; border-bottom: 1px solid rgba(58, 31, 40, 0.5); outline: 0; color: var(--poudre-ink); background: transparent; font-family: var(--serif); font-size: 0.92rem; letter-spacing: 0; text-transform: none; }
+.form-grid label { position: relative; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.4rem; padding: 1.1rem 0; border-bottom: 1px solid rgba(58, 31, 40, 0.25); font-family: var(--mono); font-size: 0.82rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--poudre-ink); }
+.form-grid input:not([type="range"]), .form-grid select { width: 100%; padding: 0.35rem 0; border: 0; border-bottom: 1px solid rgba(58, 31, 40, 0.5); outline: 0; color: var(--poudre-ink); background: transparent; font-family: var(--serif); font-size: 1.02rem; letter-spacing: 0; text-transform: none; }
 .form-grid input::placeholder { color: rgba(58, 31, 40, 0.4); }
 .form-grid option { color: var(--encre); }
-.form-grid output { color: var(--poudre-ink); font-weight: 700; font-size: 0.68rem; letter-spacing: 0; text-transform: none; }
+.form-grid output { color: var(--poudre-ink); font-weight: 700; font-size: 0.79rem; letter-spacing: 0; text-transform: none; }
 .form-grid input[type="range"] { width: 100%; }
 .form-grid input[aria-invalid="true"], .form-grid select[aria-invalid="true"] { border-bottom-color: var(--poudre-ink); border-bottom-width: 2px; }
-.field-error { flex-basis: 100%; order: 3; font-family: var(--serif); font-size: 0.78rem; font-style: italic; text-transform: none; letter-spacing: 0; color: var(--poudre-ink); }
-.range-bounds { display: flex; justify-content: space-between; width: 100%; font-size: 0.62rem; opacity: 0.65; }
+.field-error { flex-basis: 100%; order: 3; font-family: var(--serif); font-size: 0.89rem; font-style: italic; text-transform: none; letter-spacing: 0; color: var(--poudre-ink); }
+.range-bounds { display: flex; justify-content: space-between; width: 100%; font-size: 0.72rem; opacity: 0.65; }
 
 .wedding-form-bottom { display: flex; justify-content: space-between; align-items: flex-end; gap: 2rem; padding-top: 1.5rem; flex-wrap: wrap; }
-.wedding-form-bottom p { margin: 0; font-size: 0.82rem; line-height: 1.5; }
+.wedding-form-bottom p { margin: 0; font-size: 0.93rem; line-height: 1.5; }
 .wedding-form-bottom strong { font-style: italic; }
-.price-explainer { margin-top: 0.5rem !important; max-width: 32rem; font-size: 0.74rem !important; opacity: 0.75; }
+.price-explainer { margin-top: 0.5rem !important; max-width: 32rem; font-size: 0.86rem !important; opacity: 0.75; }
 .wedding-actions { display: flex; gap: 0.9rem; flex-wrap: wrap; }
 .wedding-actions .button { flex: none; }
 .wedding-actions .button-outline { border-color: var(--poudre-ink); color: var(--poudre-ink); }
 .wedding-actions .button:disabled { opacity: 0.4; cursor: not-allowed; }
-.form-success { margin: 1.4rem 0 0; padding: 0.9rem 1rem; border: 1px solid currentColor; font-size: 0.82rem; line-height: 1.5; }
+.form-success { margin: 1.4rem 0 0; padding: 0.9rem 1rem; border: 1px solid currentColor; font-size: 0.93rem; line-height: 1.5; }
 
 /* ---------- Footer ---------- */
 
 .site-footer { display: grid; grid-template-columns: 1fr auto; gap: 2rem; align-items: end; padding-block: 3rem; background: var(--papier); border-top: 1px solid var(--line); }
-.site-footer > div > p { margin: 0.6rem 0 0; color: var(--encre-soft); font-size: 0.8rem; }
-.footer-links { display: flex; gap: 1.3rem; font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.04em; text-transform: uppercase; }
-.footer-links a { border-bottom: 1px solid transparent; }
+.site-footer > div > p { margin: 0.6rem 0 0; color: var(--encre-soft); font-size: 0.9rem; }
+.footer-links { display: flex; gap: 1.3rem; font-family: var(--mono); font-size: 0.84rem; letter-spacing: 0.04em; text-transform: uppercase; }
+.footer-links a { border-bottom: 2px solid transparent; }
 .footer-links a:hover { border-color: var(--encre); }
 
 @media (max-width: 1100px) {
