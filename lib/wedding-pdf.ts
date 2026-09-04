@@ -64,6 +64,8 @@ export function buildWeddingPdf(enquiry: WeddingEnquiry): jsPDF {
   const ink = "#1e2a33";
   const inkSoft = "#5c6a72";
   const hairline = "#c9c2b4";
+  const poudre = "#e7c3cd";
+  const poudreDeep = "#c98ea0";
 
   const issueDate = new Date();
   const reference = devisReference(enquiry);
@@ -79,7 +81,9 @@ export function buildWeddingPdf(enquiry: WeddingEnquiry): jsPDF {
   doc.setTextColor(ink);
   doc.text("fleur", margin, y);
   const fleurWidth = doc.getTextWidth("fleur");
+  doc.setTextColor(poudreDeep);
   doc.text("IA", margin + fleurWidth, y);
+  doc.setTextColor(ink);
 
   doc.setFont("courier", "normal");
   doc.setFontSize(7.5);
@@ -101,8 +105,8 @@ export function buildWeddingPdf(enquiry: WeddingEnquiry): jsPDF {
   });
 
   y += 16;
-  doc.setDrawColor(ink);
-  doc.setLineWidth(0.6);
+  doc.setDrawColor(poudreDeep);
+  doc.setLineWidth(1);
   doc.line(margin, y, pageWidth - margin, y);
 
   // Issuer / client two-column block.
@@ -204,16 +208,17 @@ export function buildWeddingPdf(enquiry: WeddingEnquiry): jsPDF {
   doc.setTextColor(inkSoft);
   doc.text("TVA non applicable — art. 293 B du CGI", cols.label, y);
 
-  y += 8;
-  doc.setDrawColor(ink);
-  doc.setLineWidth(0.5);
-  doc.line(margin, y, pageWidth - margin, y);
-  y += 8;
+  y += 6;
+  const totalBandHeight = 16;
+  doc.setFillColor(poudre);
+  doc.rect(margin, y, contentWidth, totalBandHeight, "F");
+  y += totalBandHeight * 0.68;
   doc.setFont("times", "bolditalic");
   doc.setFontSize(15);
   doc.setTextColor(ink);
-  doc.text("TOTAL ESTIMÉ", cols.label, y);
-  doc.text(formatPrice(total), cols.total, y, { align: "right" });
+  doc.text("TOTAL ESTIMÉ", cols.label + 6, y);
+  doc.text(formatPrice(total), cols.total - 6, y, { align: "right" });
+  y += totalBandHeight * 0.32 + 6;
 
   // Signature area.
   y += 20;

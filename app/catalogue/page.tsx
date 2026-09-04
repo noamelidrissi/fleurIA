@@ -4,7 +4,7 @@ import { FormEvent, Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { PlateFrame, PlateCaption } from "@/components/plate";
-import { ArrowUpRight } from "@/components/icons";
+import { ArrowUpRight, ChatBubble } from "@/components/icons";
 import { plates, catalogNotes, resolveCatalogueReply, matchSpecies, findSpecies, type SpeciesKey } from "@/lib/species";
 
 type ChatMessage = {
@@ -141,9 +141,9 @@ function CatalogueContent() {
           </div>
           <div className="chat-window">
             <div className="chat-topline">
-              <span className="presence-dot" aria-hidden="true" />
-              <span>assistant catalogue</span>
-              <span className="chat-status">{isThinking ? "Rédige une réponse…" : "En ligne"}</span>
+              <ChatBubble />
+              <span className="chat-title">Discutez avec l&apos;assistant fleurIA</span>
+              <span className="chat-status"><span className="presence-dot" aria-hidden="true" />{isThinking ? "Rédige une réponse…" : "En ligne"}</span>
             </div>
             <div className="messages" aria-live="polite" ref={messagesRef}>
               {messages.map((message, index) => {
@@ -172,8 +172,8 @@ function CatalogueContent() {
                 );
               })}
             </div>
+            <label className="chat-form-label" htmlFor="catalogue-question">Écrivez votre message ici</label>
             <form className="chat-form" onSubmit={submitChat}>
-              <label className="sr-only" htmlFor="catalogue-question">Votre message</label>
               <input
                 id="catalogue-question"
                 ref={inputRef}
