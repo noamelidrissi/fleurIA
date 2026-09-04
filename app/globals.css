@@ -83,8 +83,9 @@ input[type="range"] { accent-color: var(--encre); cursor: pointer; }
   z-index: 30;
 }
 
-.wordmark { font-family: var(--serif); font-style: italic; font-size: 1.4rem; }
+.wordmark { display: inline-flex; align-items: center; gap: 0.4rem; font-family: var(--serif); font-style: italic; font-size: 1.4rem; }
 .wordmark span { font-style: normal; color: var(--encre); }
+.wordmark-icon { width: auto; height: 1.5em; }
 
 .menu-toggle {
   display: none;

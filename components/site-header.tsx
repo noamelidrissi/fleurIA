@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -18,6 +19,7 @@ export default function SiteHeader() {
   return (
     <header className="site-header page-frame">
       <Link className="wordmark" href="/" aria-label="fleurIA, retour à l'accueil" onClick={() => setMenuOpen(false)}>
+        <Image src="/images/mark/mark-ciel.png" alt="" width={141} height={240} className="wordmark-icon" priority aria-hidden="true" />
         fleur<span>IA</span>
       </Link>
       <button
